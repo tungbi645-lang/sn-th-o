@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Thảo - By Tùng Tồi Tệ</title>
+    <!-- Thư viện pháo hoa canvas-confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -209,11 +210,13 @@
 </head>
 <body>
 
+    <!-- Nhập đúng tên file nhạc Canon trong kho của bạn -->
     <audio id="bgMusic" loop>
-        <source src="canon.mp3" type="audio/mpeg">
+        <source src="Canon in D - Pachelbel.mp3" type="audio/mpeg">
         Trình duyệt của bạn không hỗ trợ thẻ audio.
     </audio>
 
+    <!-- MÀN HÌNH THIỆP BÍ MẬT -->
     <div class="card-overlay" id="cardOverlay">
         <div class="envelope" onclick="openCard()">
             <span style="font-size: 50px;">💌</span>
@@ -222,10 +225,12 @@
         <button class="open-btn" onclick="openCard()">✨ Mở Thiệp & Nghe Nhạc ✨</button>
     </div>
 
+    <!-- MÀN HÌNH NỘI DUNG CHÍNH -->
     <div class="main-wrapper" id="mainWrapper">
         <div class="photo-frame-container">
             <div class="glow-ring"></div>
-            <img src="image_729497.png" alt="Thảo" class="photo-frame">
+            <!-- Trỏ chính xác tên file ảnh của bạn -->
+            <img src="image_72a79d.png" alt="Thảo" class="photo-frame">
         </div>
 
         <div class="message-box" id="textMessage"></div>

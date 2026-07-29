@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Thảo - By Tùng Tồi Tệ</title>
-    <!-- Thư viện pháo hoa canvas-confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -44,7 +43,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: rgba(15, 7, 21, 0.92);
+            background: rgba(15, 7, 21, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
@@ -210,26 +209,23 @@
 </head>
 <body>
 
-    <!-- Nhạc nền Lofi -->
     <audio id="bgMusic" loop>
-        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+        <source src="canon.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ thẻ audio.
     </audio>
 
-    <!-- MÀN HÌNH THIỆP BÍ MẬT -->
     <div class="card-overlay" id="cardOverlay">
         <div class="envelope" onclick="openCard()">
             <span style="font-size: 50px;">💌</span>
             <div class="envelope-text">Gửi Thảo Nhé!</div>
         </div>
-        <button class="open-btn" onclick="openCard()">✨ Mở Thiệp Ngay ✨</button>
+        <button class="open-btn" onclick="openCard()">✨ Mở Thiệp & Nghe Nhạc ✨</button>
     </div>
 
-    <!-- MÀN HÌNH NỘI DUNG CHÍNH -->
     <div class="main-wrapper" id="mainWrapper">
         <div class="photo-frame-container">
             <div class="glow-ring"></div>
-            <!-- Đổi tên file 'image_72a79d.png' nếu cần -->
-            <img src="image_72a79d.png" alt="Thảo" class="photo-frame">
+            <img src="image_729497.png" alt="Thảo" class="photo-frame">
         </div>
 
         <div class="message-box" id="textMessage"></div>
@@ -254,29 +250,32 @@
             document.body.appendChild(star);
         }
 
-        // 2. Hành động khi bấm mở thiệp
+        // 2. Hành động khi bấm mở thiệp (Phát nhạc Canon D + Hiệu ứng)
         function openCard() {
-            // Phát nhạc nền (vượt qua cơ chế chặn của trình duyệt)
             const music = document.getElementById('bgMusic');
-            music.play().catch(e => console.log(e));
+            music.play().then(() => {
+                console.log("Nhạc Canon D đang phát!");
+            }).catch(error => {
+                console.log("Lỗi phát nhạc:", error);
+            });
 
             // Ẩn màn hình thiệp đi
             const overlay = document.getElementById('cardOverlay');
             overlay.style.opacity = '0';
             overlay.style.visibility = 'hidden';
 
-            // Hiện màn hình chính lên
+            // Hiển thị màn hình chính
             const mainWrapper = document.getElementById('mainWrapper');
             mainWrapper.classList.add('show');
 
-            // Bắn pháo hoa rực rỡ chúc mừng mở thiệp
+            // Bắn pháo hoa tưng bừng
             launchMassiveFireworks();
 
-            // Bắt đầu chạy chữ lời chúc sau 0.5s
+            // Chạy chữ lời chúc
             setTimeout(typeWriter, 500);
         }
 
-        // 3. Hiệu ứng pháo hoa hoành tráng
+        // 3. Pháo hoa liên tục
         function launchMassiveFireworks() {
             var duration = 4 * 1000;
             var animationEnd = Date.now() + duration;
@@ -288,13 +287,10 @@
 
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
-
                 if (timeLeft <= 0) {
                     return clearInterval(interval);
                 }
-
                 var particleCount = 50 * (timeLeft / duration);
-                // Bắn pháo hoa từ nhiều hướng
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
                     origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
@@ -325,7 +321,6 @@ Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tu�
                 index++;
                 setTimeout(typeWriter, speed);
             } else {
-                // Bắn thêm một đợt pháo hoa nhỏ khi gõ xong chữ chúc
                 confetti({
                     particleCount: 100,
                     spread: 70,

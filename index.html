@@ -1,1 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Thảo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff0f3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
 
+        /* Khung chứa chính */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 30px;
+        }
+
+        /* Thân cây */
+        .trunk {
+            width: 15px;
+            height: 0px;
+            background-color: #8B4513;
+            position: absolute;
+            bottom: 120px;
+            animation: growTrunk 2s ease-out forwards;
+            border-radius: 5px;
+        }
+
+        @keyframes growTrunk {
+            to { height: 180px; }
+        }
+
+        /* Tán lá hình trái tim (xuất hiện sau khi cây mọc) */
+        .heart-tree {
+            position: absolute;
+            top: 70px;
+            width: 220px;
+            height: 200px;
+            opacity: 0;
+            transform: scale(0);
+            animation: bloomTree 1.5s ease-in-out 2s forwards;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes bloomTree {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Các trái tim nhỏ tạo thành tán lá */
+        .heart-leaf {
+            color: #ff4d6d;
+            font-size: 20px;
+            margin: -3px;
+            animation: heartbeat 1.5s infinite alternate;
+        }
+
+        @keyframes heartbeat {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        /* Phần chữ lời chúc */
+        .message-box {
+            position: absolute;
+            top: 280px;
+            width: 85%;
+            text-align: left;
+            font-size: 13.5px;
+            color: #555;
+            line-height: 1.5;
+            white-space: pre-line;
+            min-height: 130px;
+        }
+
+        /* Đồng hồ đếm ngược */
+        .countdown {
+            position: absolute;
+            bottom: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #c9184a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Hộp chứa chữ lời chúc -->
+        <div class="message-box" id="textMessage"></div>
+
+        <!-- Thân cây -->
+        <div class="trunk"></div>
+
+        <!-- Tán lá trái tim -->
+        <div class="heart-tree" id="treeCanopy"></div>
+
+        <!-- Đếm ngược thời gian -->
+        <div class="countdown">
+            <div>Esperando tu cumple en...</div>
+            <div id="timer" style="margin-top: 5px; font-size: 14px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Tạo các chiếc lá hình trái tim
+        const canopy = document.getElementById('treeCanopy');
+        for (let i = 0; i < 45; i++) {
+            const span = document.createElement('span');
+            span.className = 'heart-leaf';
+            span.innerHTML = '❤️';
+            canopy.appendChild(span);
+        }
+
+        // Nội dung lời chúc mới
+        const textContent = `Chúc Mừng Sinh Nhật Thảo, 
+
+Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tuổi mới gặp nhiều may mắn, thuận lợi thi đỗ 2 kì thi sắp tới nhé. 
+
+— Ký tên: Tùng Tồi Tệ haha —`;
+
+        let index = 0;
+        const speed = 45; // Tốc độ gõ chữ
+        const textMessage = document.getElementById('textMessage');
+
+        function typeWriter() {
+            if (index < textContent.length) {
+                textMessage.innerHTML += textContent.charAt(index);
+                index++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        // Bắt đầu chạy chữ sau khi cây mọc xong (3.5 giây)
+        setTimeout(typeWriter, 3500);
+
+        // Đồng hồ đếm ngược đến sinh nhật ngày 04/08
+        function updateCountdown() {
+            const now = new Date();
+            let currentYear = now.getFullYear();
+            
+            // Ngày sinh nhật năm nay (04 tháng 8)
+            let targetDate = new Date(currentYear, 7, 4, 0, 0, 0); // Tháng 7 vì trong JS tính từ 0 (0 = tháng 1, 7 = tháng 8)
+            
+            // Nếu ngày 04/08 năm nay đã qua, tự động tính đếm ngược sang năm sau
+            if (now > targetDate) {
+                targetDate = new Date(currentYear + 1, 7, 4, 0, 0, 0);
+            }
+
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((difference / 1000 / 60) % 60);
+                const seconds = Math.floor((difference / 1000) % 60);
+
+                document.getElementById('timer').innerHTML = 
+                    `<span>${days} días ${hours} horas ${minutes} min ${seconds} seg</span>`;
+            } else {
+                document.getElementById('timer').innerHTML = "¡Feliz Cumpleaños Thảo! 🎉";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>

@@ -2,170 +2,225 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Thảo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Thảo - Từ Tùng Tồi Tệ</title>
     <style>
-        body {
+        /* Reset CSS cơ bản */
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #fff0f3;
+        }
+
+        body {
+            background-color: #fff0f3; /* Màu nền hồng nhạt */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            padding: 20px;
         }
 
-        /* Khung chứa chính */
-        .container {
+        /* Khung chứa chính, cố định kích thước để dễ căn chỉnh */
+        .main-wrapper {
             position: relative;
             width: 100%;
             max-width: 400px;
-            height: 600px;
+            height: 650px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-end;
-            padding-bottom: 30px;
+            justify-content: flex-end; /* Đẩy mọi thứ xuống dưới */
+        }
+
+        /* --- Khu vực Cây Tình Yêu --- */
+        .tree-container {
+            position: absolute;
+            bottom: 160px; /* Cây nằm phía trên lời chúc và đồng hồ */
+            display: flex;
+            justify-content: center;
+            width: 200px;
+            height: 200px;
         }
 
         /* Thân cây */
         .trunk {
-            width: 15px;
-            height: 0px;
-            background-color: #8B4513;
+            width: 12px;
+            height: 0px; /* Bắt đầu từ 0 để tạo hiệu ứng mọc */
+            background-color: #795548; /* Màu nâu gỗ */
             position: absolute;
-            bottom: 120px;
-            animation: growTrunk 2s ease-out forwards;
-            border-radius: 5px;
+            bottom: 0;
+            border-radius: 6px;
+            animation: growTrunk 2s ease-out forwards; /* Hiệu ứng mọc lên */
         }
 
         @keyframes growTrunk {
-            to { height: 180px; }
+            to { height: 180px; } /* Chiều cao cuối cùng của thân */
         }
 
-        /* Tán lá hình trái tim (xuất hiện sau khi cây mọc) */
-        .heart-tree {
+        /* Tán lá trái tim */
+        .heart-canopy {
             position: absolute;
-            top: 70px;
-            width: 220px;
+            top: -30px; /* Nằm trên đỉnh thân cây */
+            width: 200px;
             height: 200px;
-            opacity: 0;
+            opacity: 0; /* Ẩn lúc đầu */
             transform: scale(0);
-            animation: bloomTree 1.5s ease-in-out 2s forwards;
+            animation: bloomCanopy 1.5s ease-in-out 2s forwards; /* Hiệu ứng bung ra sau khi cây mọc */
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
         }
 
-        @keyframes bloomTree {
+        @keyframes bloomCanopy {
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
 
-        /* Các trái tim nhỏ tạo thành tán lá */
+        /* Từng trái tim nhỏ */
         .heart-leaf {
-            color: #ff4d6d;
-            font-size: 20px;
-            margin: -3px;
-            animation: heartbeat 1.5s infinite alternate;
+            color: #ff4d6d; /* Màu đỏ hồng */
+            font-size: 22px; /* Kích thước trái tim */
+            line-height: 1;
+            margin: -2px; /* Khoảng cách âm để các trái tim khít lại */
+            animation: heartbeat 1.5s infinite alternate; /* Hiệu ứng đập */
         }
 
+        /* Animation cho trái tim đập */
         @keyframes heartbeat {
             from { transform: scale(1); }
             to { transform: scale(1.15); }
         }
 
-        /* Phần chữ lời chúc */
+        /* --- Khu vực Lời chúc --- */
         .message-box {
             position: absolute;
-            top: 280px;
-            width: 85%;
-            text-align: left;
-            font-size: 13.5px;
-            color: #555;
-            line-height: 1.5;
-            white-space: pre-line;
-            min-height: 130px;
+            bottom: 55px; /* Nằm ngay trên đồng hồ */
+            width: 100%;
+            text-align: center;
+            font-size: 15px;
+            color: #4a4a4a;
+            line-height: 1.6;
+            min-height: 110px; /* Giữ chiều cao khung chữ */
+            white-space: pre-wrap; /* Giữ nguyên xuống dòng trong code */
+            padding: 0 15px;
         }
 
-        /* Đồng hồ đếm ngược */
-        .countdown {
+        /* --- Khu vực Đồng hồ đếm ngược --- */
+        .countdown-box {
             position: absolute;
-            bottom: 30px;
+            bottom: 5px;
+            width: 100%;
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             color: #c9184a;
             font-weight: bold;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.5); /* Nền mờ nhẹ */
+            border-radius: 10px;
+        }
+
+        #timer {
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        /* Responsive cho màn hình nhỏ */
+        @media (max-width: 400px) {
+            .main-wrapper { height: 90vh; }
+            .tree-container { bottom: 150px; }
+            .message-box { font-size: 14px; bottom: 50px; }
+            .countdown-box { font-size: 13px; bottom: 0; }
+            .heart-leaf { font-size: 18px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Hộp chứa chữ lời chúc -->
+    <div class="main-wrapper">
+        
+        <!-- Cây Tình Yêu (Thân + Lá) -->
+        <div class="tree-container">
+            <div class="trunk"></div>
+            <div class="heart-canopy" id="heartCanopy">
+                <!-- Các trái tim sẽ được tạo bằng JavaScript -->
+            </div>
+        </div>
+
+        <!-- Hộp chứa chữ lời chúc (hiệu ứng đánh máy) -->
         <div class="message-box" id="textMessage"></div>
 
-        <!-- Thân cây -->
-        <div class="trunk"></div>
-
-        <!-- Tán lá trái tim -->
-        <div class="heart-tree" id="treeCanopy"></div>
-
-        <!-- Đếm ngược thời gian -->
-        <div class="countdown">
+        <!-- Đồng hồ đếm ngược -->
+        <div class="countdown-box">
             <div>Esperando tu cumple en...</div>
-            <div id="timer" style="margin-top: 5px; font-size: 14px;"></div>
+            <div id="timer"></div>
         </div>
     </div>
 
     <script>
-        // Tạo các chiếc lá hình trái tim
-        const canopy = document.getElementById('treeCanopy');
-        for (let i = 0; i < 45; i++) {
-            const span = document.createElement('span');
-            span.className = 'heart-leaf';
-            span.innerHTML = '❤️';
-            canopy.appendChild(span);
-        }
+        // 1. TẠO TÁN LÁ TRÁI TIM BẰNG JAVASCRIPT
+        const canopy = document.getElementById('heartCanopy');
+        // Mảng định nghĩa số lượng trái tim trên mỗi hàng để tạo hình trái tim
+        const heartRows = [6, 9, 10, 9, 7, 4]; 
 
-        // Nội dung lời chúc mới
-        const textContent = `Chúc Mừng Sinh Nhật Thảo, 
+        heartRows.forEach(count => {
+            const rowDiv = document.createElement('div');
+            rowDiv.style.display = 'flex';
+            rowDiv.style.width = '100%';
+            rowDiv.style.justifyContent = 'center';
+            rowDiv.style.margin = '-2px 0'; // Điều chỉnh khoảng cách hàng
+            
+            for (let i = 0; i < count; i++) {
+                const span = document.createElement('span');
+                span.className = 'heart-leaf';
+                span.innerHTML = '❤️';
+                rowDiv.appendChild(span);
+            }
+            canopy.appendChild(rowDiv);
+        });
+
+
+        // 2. HIỆU ỨNG CHỮ ĐÁNH MÁY
+        const rawContent = `Chúc Mừng Sinh Nhật Thảo, 
 
 Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tuổi mới gặp nhiều may mắn, thuận lợi thi đỗ 2 kì thi sắp tới nhé. 
 
 — Ký tên: Tùng Tồi Tệ haha —`;
 
+        // Xử lý xuống dòng chuẩn xác
+        const textContent = rawContent.replace(/\n/g, '\n');
+
         let index = 0;
-        const speed = 45; // Tốc độ gõ chữ
+        const speed = 50; // Tốc độ gõ (ms)
         const textMessage = document.getElementById('textMessage');
 
         function typeWriter() {
             if (index < textContent.length) {
-                textMessage.innerHTML += textContent.charAt(index);
+                textMessage.innerHTML = textContent.substring(0, index + 1);
                 index++;
                 setTimeout(typeWriter, speed);
             }
         }
 
-        // Bắt đầu chạy chữ sau khi cây mọc xong (3.5 giây)
+        // Bắt đầu chạy chữ sau khi cây mọc xong (3.5s)
         setTimeout(typeWriter, 3500);
 
-        // Đồng hồ đếm ngược đến sinh nhật ngày 04/08
+
+        // 3. ĐỒNG HỒ ĐẾM NGƯỢC
         function updateCountdown() {
             const now = new Date();
             let currentYear = now.getFullYear();
             
-            // Ngày sinh nhật năm nay (04 tháng 8)
-            let targetDate = new Date(currentYear, 7, 4, 0, 0, 0); // Tháng 7 vì trong JS tính từ 0 (0 = tháng 1, 7 = tháng 8)
+            // Ngày sinh nhật năm nay (Tháng 7 là tháng 8)
+            let targetDate = new Date(currentYear, 7, 4, 0, 0, 0); 
             
-            // Nếu ngày 04/08 năm nay đã qua, tự động tính đếm ngược sang năm sau
+            // Nếu sinh nhật năm nay đã qua, tính sang năm sau
             if (now > targetDate) {
                 targetDate = new Date(currentYear + 1, 7, 4, 0, 0, 0);
             }
@@ -179,7 +234,7 @@ Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tu�
                 const seconds = Math.floor((difference / 1000) % 60);
 
                 document.getElementById('timer').innerHTML = 
-                    `<span>${days} días ${hours} horas ${minutes} min ${seconds} seg</span>`;
+                    `${days} días ${hours} horas ${minutes} min ${seconds} seg`;
             } else {
                 document.getElementById('timer').innerHTML = "¡Feliz Cumpleaños Thảo! 🎉";
             }
@@ -187,6 +242,7 @@ Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tu�
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
+
     </script>
 </body>
 </html>

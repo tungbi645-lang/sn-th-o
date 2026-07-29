@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Thảo - By Tùng Tồi Tệ</title>
+    <!-- Thư viện pháo hoa canvas-confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         * {
@@ -24,7 +25,7 @@
             position: relative;
         }
 
-        /* Hiệu ứng các ngôi sao lấp lánh nền */
+        /* Sao lấp lánh nền */
         .star {
             position: absolute;
             background-color: #ffffff;
@@ -38,7 +39,74 @@
             50% { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Khung hiển thị chính */
+        /* MÀN HÌNH 1: CHIẾC THIỆP BAN ĐẦU */
+        .card-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 7, 21, 0.92);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .envelope {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            width: 280px;
+            height: 180px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(255, 117, 140, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+            animation: floatEnvelope 2s ease-in-out infinite alternate;
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes floatEnvelope {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .envelope-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .open-btn {
+            margin-top: 25px;
+            background: #ffffff;
+            color: #ff4d6d;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .open-btn:hover {
+            background: #ffe6eb;
+            transform: scale(1.08);
+        }
+
+        /* MÀN HÌNH CHÍNH (Sau khi bấm mở thiệp) */
         .main-wrapper {
             position: relative;
             width: 100%;
@@ -50,14 +118,24 @@
             justify-content: space-between;
             padding: 30px 20px;
             z-index: 2;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1s ease;
+            pointer-events: none;
         }
 
-        /* Khung chứa ảnh nghệ thuật (Thay thế hoàn toàn cho cái cây) */
+        .main-wrapper.show {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Khung ảnh */
         .photo-frame-container {
             position: relative;
-            width: 160px;
-            height: 160px;
-            margin-top: 10px;
+            width: 150px;
+            height: 150px;
+            margin-top: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -66,25 +144,24 @@
 
         @keyframes floatPhoto {
             0% { transform: translateY(0px); }
-            100% { transform: translateY(-8px); }
+            100% { transform: translateY(-6px); }
         }
 
         .photo-frame {
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid #ff758c;
-            box-shadow: 0 0 20px rgba(255, 117, 140, 0.6), 0 0 40px rgba(255, 117, 140, 0.3);
+            box-shadow: 0 0 25px rgba(255, 117, 140, 0.7);
         }
 
-        /* Hiệu ứng vòng sáng trang trí quanh ảnh */
         .glow-ring {
             position: absolute;
-            width: 170px;
-            height: 170px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
-            border: 2px dashed rgba(255, 182, 193, 0.5);
+            border: 2px dashed rgba(255, 182, 193, 0.6);
             animation: rotateRing 15s linear infinite;
         }
 
@@ -93,7 +170,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Hộp chứa chữ lời chúc kiểu thanh lịch */
+        /* Hộp lời chúc */
         .message-box {
             width: 100%;
             text-align: center;
@@ -129,35 +206,29 @@
             color: #ffffff;
             letter-spacing: 0.5px;
         }
-
-        /* Nút bật/tắt nhạc góc phải */
-        .music-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            z-index: 10;
-            backdrop-filter: blur(5px);
-        }
     </style>
 </head>
 <body>
 
-    <button class="music-btn" id="musicToggle" onclick="toggleMusic()">🎵 Bật/Tắt Nhạc</button>
-
+    <!-- Nhạc nền Lofi -->
     <audio id="bgMusic" loop>
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="main-wrapper">
+    <!-- MÀN HÌNH THIỆP BÍ MẬT -->
+    <div class="card-overlay" id="cardOverlay">
+        <div class="envelope" onclick="openCard()">
+            <span style="font-size: 50px;">💌</span>
+            <div class="envelope-text">Gửi Thảo Nhé!</div>
+        </div>
+        <button class="open-btn" onclick="openCard()">✨ Mở Thiệp Ngay ✨</button>
+    </div>
+
+    <!-- MÀN HÌNH NỘI DUNG CHÍNH -->
+    <div class="main-wrapper" id="mainWrapper">
         <div class="photo-frame-container">
             <div class="glow-ring"></div>
+            <!-- Đổi tên file 'image_72a79d.png' nếu cần -->
             <img src="image_72a79d.png" alt="Thảo" class="photo-frame">
         </div>
 
@@ -170,7 +241,7 @@
     </div>
 
     <script>
-        // 1. Tạo hiệu ứng bầu trời đầy sao động
+        // 1. Tạo sao lấp lánh nền
         for (let i = 0; i < 50; i++) {
             const star = document.createElement('div');
             star.className = 'star';
@@ -183,7 +254,61 @@
             document.body.appendChild(star);
         }
 
-        // 2. Giữ nguyên 100% lời chúc của bạn
+        // 2. Hành động khi bấm mở thiệp
+        function openCard() {
+            // Phát nhạc nền (vượt qua cơ chế chặn của trình duyệt)
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log(e));
+
+            // Ẩn màn hình thiệp đi
+            const overlay = document.getElementById('cardOverlay');
+            overlay.style.opacity = '0';
+            overlay.style.visibility = 'hidden';
+
+            // Hiện màn hình chính lên
+            const mainWrapper = document.getElementById('mainWrapper');
+            mainWrapper.classList.add('show');
+
+            // Bắn pháo hoa rực rỡ chúc mừng mở thiệp
+            launchMassiveFireworks();
+
+            // Bắt đầu chạy chữ lời chúc sau 0.5s
+            setTimeout(typeWriter, 500);
+        }
+
+        // 3. Hiệu ứng pháo hoa hoành tráng
+        function launchMassiveFireworks() {
+            var duration = 4 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                // Bắn pháo hoa từ nhiều hướng
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                    colors: ['#ff758c', '#ff7eb3', '#ffffff', '#ffd1dc']
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                    colors: ['#ff758c', '#ff7eb3', '#ffffff', '#ffd1dc']
+                }));
+            }, 250);
+        }
+
+        // 4. Lời chúc của bạn
         const rawContent = `Chúc Mừng Sinh Nhật Thảo, 
 
 Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tuổi mới gặp nhiều may mắn, thuận lợi thi đỗ 2 kì thi sắp tới nhé. 
@@ -191,7 +316,7 @@ Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tu�
 — Ký tên: Tùng Tồi Tệ haha —`;
 
         let index = 0;
-        const speed = 45;
+        const speed = 40;
         const textMessage = document.getElementById('textMessage');
 
         function typeWriter() {
@@ -200,42 +325,17 @@ Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tu�
                 index++;
                 setTimeout(typeWriter, speed);
             } else {
-                // Khi gõ xong chữ thì bắn pháo hoa ăn mừng
-                triggerFireworks();
+                // Bắn thêm một đợt pháo hoa nhỏ khi gõ xong chữ chúc
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#ff758c', '#ff7eb3', '#ffffff']
+                });
             }
         }
 
-        // Bắt đầu chạy chữ sau 1 giây mở trang
-        setTimeout(typeWriter, 1000);
-
-        // 3. Hiệu ứng pháo hoa rực rỡ
-        function triggerFireworks() {
-            var duration = 3 * 1000;
-            var end = Date.now() + duration;
-
-            (function frame() {
-                confetti({
-                    particleCount: 4,
-                    angle: 60,
-                    spread: 60,
-                    origin: { x: 0, y: 0.7 },
-                    colors: ['#ff758c', '#ff7eb3', '#ffffff']
-                });
-                confetti({
-                    particleCount: 4,
-                    angle: 120,
-                    spread: 60,
-                    origin: { x: 1, y: 0.7 },
-                    colors: ['#ff758c', '#ff7eb3', '#ffffff']
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-        }
-
-        // 4. Đồng hồ đếm ngược đến 04/08
+        // 5. Đồng hồ đếm ngược đến 04/08
         function updateCountdown() {
             const now = new Date();
             let currentYear = now.getFullYear();
@@ -262,32 +362,6 @@ Tùng chúc Thảo sinh nhật tuổi mới thật là vui vẻ, chúc cậu tu�
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
-
-        // 5. Xử lý âm thanh nhạc nền
-        const music = document.getElementById('bgMusic');
-        let isPlaying = false;
-
-        function toggleMusic() {
-            if (isPlaying) {
-                music.pause();
-                isPlaying = false;
-                document.getElementById('musicToggle').innerText = "🎵 Bật Nhạc";
-            } else {
-                music.play().then(() => {
-                    isPlaying = true;
-                    document.getElementById('musicToggle').innerText = "🔇 Tắt Nhạc";
-                }).catch(e => {});
-            }
-        }
-
-        window.addEventListener('click', () => {
-            if (!isPlaying) {
-                music.play().then(() => {
-                    isPlaying = true;
-                    document.getElementById('musicToggle').innerText = "🔇 Tắt Nhạc";
-                }).catch(e => {});
-            }
-        }, { once: true });
     </script>
 </body>
 </html>
